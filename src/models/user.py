@@ -1,7 +1,6 @@
 from marshmallow import  Schema, fields
 from sqlalchemy import Column, String, DateTime
 from .model import Model, Base
-from datetime import datetime, timedelta
 from uuid import uuid4
 import argon2
 
@@ -26,11 +25,19 @@ class User(Model, Base):
 
     self.password = argon2.hash_password(
       password.encode('utf-8')
-    )
+    ).decode('utf-8')
     self.set_token()
 
   def set_token(self):
     self.token = uuid4()
+
+  def match_password(self, given_password):
+    try:
+      argon2.verify_password(self.password.encode('utf-8'), given_password.encode('utf-8'))
+      return True
+    except:
+      return False
+
 
 class UserSchema(Schema):
   id = fields.Number()

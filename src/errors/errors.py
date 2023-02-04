@@ -6,6 +6,10 @@ class UserAlreadyExists(ApiError):
     code = 412
     description = "Usuario con username o email ya existe"
 
+class InvalidUserCredentials(ApiError):
+    code = 401
+    description = "Email o contraseña inválidos"
+
 class SpecialistAlreadyExists(ApiError):
     code = 412
     description = "Especialista con username o email ya existe"
