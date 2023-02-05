@@ -22,7 +22,7 @@ class TestLoginSpecialist():
   def setup_method(self):
     Base.metadata.create_all(engine)
     self.session = Session()
-    self.new_sp_email = ''.join(random.choice(self.letters) for i in range(10)) + "@uniandes.edu.co"
+    self.new_sp_email = ''.join(random.choice(self.letters) for _ in range(10)) + "@uniandes.edu.co"
 
     data = {
       'name': self.SPECIALIST_NAME,
@@ -59,7 +59,7 @@ class TestLoginSpecialist():
   def test_login_specialist_not_register(self):
     try:
       sp = {
-       'email': ''.join(random.choice(self.letters) for i in range(10)) + "@uniandes.edu.co",
+       'email': ''.join(random.choice(self.letters) for _ in range(10)) + "@uniandes.edu.co",
        'password': self.SPECIALIST_PASSWORD
       }
       LoginSpecialist(sp).execute()

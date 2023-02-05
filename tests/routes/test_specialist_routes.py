@@ -17,6 +17,7 @@ class TestUserRoutes():
   SPECIALIST_SPECIALTY = "Cardiology"
   BASE_PATH = '/specialist'
   letters = string.ascii_lowercase
+  LOGIN_BASE_PATH = '/login'
 
   def setup_method(self):
     Base.metadata.create_all(engine)
@@ -81,7 +82,7 @@ class TestUserRoutes():
 
     with app.test_client() as test_client:
       response = test_client.post(
-        self.BASE_PATH + '/login', json={
+        self.BASE_PATH + self.LOGIN_BASE_PATH, json={
           'email': self.SPECIALIST_EMAIL,
           'password': self.SPECIALIST_PASSWORD
         }
@@ -93,7 +94,7 @@ class TestUserRoutes():
   def test_login_specialist_without_fields(self):
     with app.test_client() as test_client:
       response = test_client.post(
-        self.BASE_PATH+'/login', json={}
+        self.BASE_PATH+self.LOGIN_BASE_PATH, json={}
       )
       assert response.status_code == 400
 
@@ -111,7 +112,7 @@ class TestUserRoutes():
 
     with app.test_client() as test_client:
       response = test_client.post(
-        self.BASE_PATH + '/login', json={
+        self.BASE_PATH + self.LOGIN_BASE_PATH, json={
           'email': self.SPECIALIST_EMAIL,
           'password': ''.join(random.choice(self.letters) for i in range(5))
         }

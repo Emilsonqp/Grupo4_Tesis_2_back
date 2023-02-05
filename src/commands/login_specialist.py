@@ -25,9 +25,9 @@ class LoginSpecialist(BaseCommannd):
             if user is None:
                 raise SpecialistIsNotRegister()
 
-            hash = user.password
-            ph.verify(hash, u_password.encode('utf-8'))
-            if ph.check_needs_rehash(hash):
+            pass_hash = user.password
+            ph.verify(pass_hash, u_password.encode('utf-8'))
+            if ph.check_needs_rehash(pass_hash):
                 user.password = ph.hash(u_password.encode('utf-8'))
                 session.add(user)
                 session.commit()
