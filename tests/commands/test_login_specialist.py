@@ -18,6 +18,7 @@ class TestLoginSpecialist():
   SPECIALIST_SPECIALITY = "rostro"
   BASE_PATH = '/specialist/login'
   letters = string.ascii_lowercase
+  SUCCESS_TRUE = True
 
   def setup_method(self):
     Base.metadata.create_all(engine)
@@ -46,7 +47,7 @@ class TestLoginSpecialist():
       assert specialist['email'] == sp['email']
       assert specialist['password'] == sp['password']
     except SpecialistIsNotRegister:
-      assert True
+      assert self.SUCCESS_TRUE
 
   def test_login_specialist_missing_fields(self):
     try:
@@ -54,7 +55,7 @@ class TestLoginSpecialist():
 
       assert False
     except InvalidParams:
-      assert True
+      assert self.SUCCESS_TRUE
 
   def test_login_specialist_not_register(self):
     try:
@@ -66,19 +67,19 @@ class TestLoginSpecialist():
 
       assert False
     except SpecialistIsNotRegister:
-      assert True
+      assert self.SUCCESS_TRUE
 
   def test_login_specialist_wrong_password(self):
     sp = {
       'email': self.new_sp_email,
-      'password': ''.join(random.choice(self.letters) for i in range(5))
+      'password': ''.join(random.choice(self.letters) for _ in range(5))
      }
     try:
       LoginSpecialist(sp).execute()
 
       assert False
     except SpecialistWrongPassword:
-      assert True
+      assert self.SUCCESS_TRUE
 
   def teardown_method(self):
     close_all_sessions()

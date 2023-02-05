@@ -114,7 +114,7 @@ class TestUserRoutes():
       response = test_client.post(
         self.BASE_PATH + self.LOGIN_BASE_PATH, json={
           'email': self.SPECIALIST_EMAIL,
-          'password': ''.join(random.choice(self.letters) for i in range(5))
+          'password': ''.join(random.choice(self.letters) for _ in range(5))
         }
       )
       assert response.status_code == 401
