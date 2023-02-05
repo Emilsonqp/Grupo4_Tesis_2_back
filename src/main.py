@@ -10,6 +10,7 @@ from .routes.specialist_routes import specialist_routes
 from .errors.errors import ApiError
 from flask_jwt_extended import JWTManager
 
+
 app = Flask(__name__)
 app.register_blueprint(base_routes)
 app.register_blueprint(user_routes)
@@ -25,3 +26,5 @@ def handle_exception(err):
       "mssg": err.description 
     }
     return jsonify(response), err.code
+
+jwt = JWTManager(app)

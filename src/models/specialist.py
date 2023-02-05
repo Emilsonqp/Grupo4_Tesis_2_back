@@ -26,9 +26,8 @@ class Specialist(Model, Base):
     self.phone = phone
     self.specialty = specialty
 
-    self.password = argon2.hash_password(
-      password.encode('utf-8')
-    )
+    ph = argon2.PasswordHasher()
+    self.password = ph.hash(password.encode('utf-8'))
     self.set_token()
 
   def set_token(self):
