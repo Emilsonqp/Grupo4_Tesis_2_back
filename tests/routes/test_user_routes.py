@@ -60,6 +60,55 @@ class TestUserRoutes():
       )
       assert response.status_code == 412
 
+  def test_login_user_without_fields(self):
+    with app.test_client() as test_client:
+      response = test_client.post(
+        self.BASE_PATH+'/login', json={}
+      )
+      assert response.status_code == 400
+
+  def test_login_user_invalid_password(self):
+    signup_data = {
+      'name': self.USER_NAME,
+      'email': self.USER_EMAIL,
+      'birth_day': datetime.now().date().isoformat(),
+      'city': self.USER_CITY,
+      'phone': self.USER_PHONE,
+      'password': self.USER_PASSWORD
+    }
+    SignupUser(signup_data.copy()).execute()
+
+    with app.test_client() as test_client:
+      response = test_client.post(
+        self.BASE_PATH+'/login', json={
+          'email': self.USER_EMAIL,
+          'password': 'test'
+        }
+      )
+      assert response.status_code == 401
+
+  def test_login_user(self):
+    signup_data = {
+      'name': self.USER_NAME,
+      'email': self.USER_EMAIL,
+      'birth_day': datetime.now().date().isoformat(),
+      'city': self.USER_CITY,
+      'phone': self.USER_PHONE,
+      'password': self.USER_PASSWORD
+    }
+    SignupUser(signup_data.copy()).execute()
+
+    with app.test_client() as test_client:
+      response = test_client.post(
+        self.BASE_PATH + '/login', json={
+          'email': self.USER_EMAIL,
+          'password': self.USER_PASSWORD
+        }
+      )
+      response_json = json.loads(response.data)
+      assert response.status_code == 201
+      assert 'token' in response_json
+
   def teardown_method(self):
     self.session.close()
     Base.metadata.drop_all(bind=engine)

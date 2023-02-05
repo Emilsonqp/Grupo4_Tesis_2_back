@@ -11,4 +11,4 @@ pytest-mock
 pytest-env
 flask_wtf
 argon2-cffi
-flask-jwt-extended
+Flask-JWT-Extended
