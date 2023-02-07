@@ -43,3 +43,8 @@ jobs:
       env:
           MENSAJE_EXITO: Todas las pruebas fueron exitosas
       run: echo "::set-output name=respuesta::${MENSAJE_EXITO}"
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
