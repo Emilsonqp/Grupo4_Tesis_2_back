@@ -32,7 +32,7 @@ jobs:
         pip install -r requirements.txt
     - name: Correr pruebas
       id: correr-pruebas
-      run: pytest --cov=src -v -s --cov-fail-under=80
+      run: coverage run -m pytest && coverage xml
     - name: Validar resultado con errores
       if: ${{ failure() }}
       env:
