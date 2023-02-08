@@ -41,7 +41,6 @@ class SpecialistJsonSchema(Schema):
   id = fields.Number()
   name = fields.Str()
   email = fields.Str()
-  password = fields.Str()
   last_name = fields.Str()
   username = fields.Str()
   token = fields.Str()
