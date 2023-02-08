@@ -7,14 +7,12 @@ from datetime import datetime
 class SignupSpecialist(BaseCommannd):
   def __init__(self, data):
     self.data = data
-    if 'birth_day' in data:
-      self.data['birth_day'] = str(datetime.strptime(data['birth_day'], "%Y-%m-%d"))
   
   def execute(self):
     session = Session()
     try:
       posted_specialist = SpecialistSchema(
-        only=('name', 'email', 'birth_day', 'city', 'phone', 'password', 'specialty')
+        only=('name', 'last_name', 'email', 'username', 'password')
       ).load(self.data)
       user = Specialist(**posted_specialist)
 

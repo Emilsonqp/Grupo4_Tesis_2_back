@@ -8,14 +8,14 @@ from datetime import datetime
 from sqlalchemy.orm import close_all_sessions
 import string
 import random
+from src.main import app
 
 class TestLoginSpecialist():
-  SPECIALIST_NAME = "quinteroe"
-  SPECIALIST_EMAIL = "e.quinterop@uniandes.edu.co"
-  SPECIALIST_CITY = "Bogotá"
-  SPECIALIST_PHONE = "3112221212"
-  SPECIALIST_PASSWORD = "miso"
-  SPECIALIST_SPECIALITY = "rostro"
+  SPECIALIST_NAME = "Pedro"
+  SPECIALIST_EMAIL = "pedro@gmail.com"
+  SPECIALIST_LAST_NAME = "Cabra"
+  SPECIALIST_USERNAME = "p.cabra"
+  SPECIALIST_PASSWORD = "123456"
   BASE_PATH = '/specialist/login'
   letters = string.ascii_lowercase
   SUCCESS_TRUE = True
@@ -27,12 +27,10 @@ class TestLoginSpecialist():
 
     data = {
       'name': self.SPECIALIST_NAME,
-      'email': self.new_sp_email,
-      'birth_day': datetime.now().date().isoformat(),
-      'city': self.SPECIALIST_CITY,
-      'phone': self.SPECIALIST_PHONE,
-      'password': self.SPECIALIST_PASSWORD,
-      'specialty': self.SPECIALIST_SPECIALITY
+      'email': self.SPECIALIST_EMAIL,
+      'last_name': self.SPECIALIST_LAST_NAME,
+      'username': self.SPECIALIST_USERNAME,
+      'password': self.SPECIALIST_PASSWORD
     }
     self.user= SignupSpecialist(data).execute()
 
@@ -42,10 +40,10 @@ class TestLoginSpecialist():
       'password': self.SPECIALIST_PASSWORD
     }
     try:
-      specialist = LoginSpecialist(sp).execute()
+      with app.app_context():
+        specialist = LoginSpecialist(sp).execute()
 
-      assert specialist['email'] == sp['email']
-      assert specialist['password'] == sp['password']
+      assert len(specialist['access_token']) > 0
     except SpecialistIsNotRegister:
       assert self.SUCCESS_TRUE
 
@@ -71,7 +69,7 @@ class TestLoginSpecialist():
 
   def test_login_specialist_wrong_password(self):
     sp = {
-      'email': self.new_sp_email,
+      'email': self.SPECIALIST_EMAIL,
       'password': ''.join(random.choice(self.letters) for _ in range(5))
      }
     try:

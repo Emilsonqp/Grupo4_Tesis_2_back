@@ -10,21 +10,17 @@ class Specialist(Model, Base):
 
   name = Column(String)
   email = Column(String)
-  birth_day = Column(DateTime)
-  city = Column(String)
-  phone = Column(String)
-  specialty = Column(String)
+  last_name = Column(String)
+  username = Column(String)
   password = Column(String)
   token = Column(String)
 
-  def __init__(self, name, email, birth_day, city, phone,specialty, password):
+  def __init__(self, name, email, last_name, username, password):
     Model.__init__(self)
     self.name = name
     self.email = email
-    self.birth_day = birth_day
-    self.city = city
-    self.phone = phone
-    self.specialty = specialty
+    self.last_name = last_name
+    self.username = username
 
     ph = argon2.PasswordHasher()
     self.password = ph.hash(password.encode('utf-8'))
@@ -38,17 +34,14 @@ class SpecialistSchema(Schema):
   name = fields.Str()
   email = fields.Str()
   password = fields.Str()
-  birth_day = fields.DateTime()
-  city = fields.Str()
-  phone = fields.Str()
-  specialty = fields.Str()
+  last_name = fields.Str()
+  username = fields.Str()
 
 class SpecialistJsonSchema(Schema):
   id = fields.Number()
   name = fields.Str()
   email = fields.Str()
-  birth_day = fields.DateTime()
-  city = fields.Str()
-  phone = fields.Str()
-  specialty = fields.Str()
+  password = fields.Str()
+  last_name = fields.Str()
+  username = fields.Str()
   token = fields.Str()

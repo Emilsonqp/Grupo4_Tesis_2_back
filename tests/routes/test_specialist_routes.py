@@ -10,11 +10,10 @@ import random
 
 class TestUserRoutes():
   SPECIALIST_NAME = "Pedro"
-  SPECIALIST_EMAIL = "Pedro Cabra"
-  SPECIALIST_CITY = "Buenos Aires"
-  SPECIALIST_PHONE = "11123333"
+  SPECIALIST_EMAIL = "pedro@gmail.com"
+  SPECIALIST_LAST_NAME = "Cabra"
+  SPECIALIST_USERNAME = "p.cabra"
   SPECIALIST_PASSWORD = "123456"
-  SPECIALIST_SPECIALTY = "Cardiology"
   BASE_PATH = '/specialist'
   letters = string.ascii_lowercase
   LOGIN_BASE_PATH = '/login'
@@ -29,11 +28,9 @@ class TestUserRoutes():
         self.BASE_PATH, json={
           'name': self.SPECIALIST_NAME,
           'email': self.SPECIALIST_EMAIL,
-          'birth_day': datetime.now().date().isoformat(),
-          'city': self.SPECIALIST_CITY,
-          'phone': self.SPECIALIST_PHONE,
-          'password': self.SPECIALIST_PASSWORD,
-          "specialty": self.SPECIALIST_SPECIALTY
+          'last_name': self.SPECIALIST_LAST_NAME,
+          'username': self.SPECIALIST_USERNAME,
+          'password': self.SPECIALIST_PASSWORD
         }
       )
       response_json = json.loads(response.data)
@@ -41,7 +38,6 @@ class TestUserRoutes():
       assert 'name' in response_json
       assert 'email' in response_json
       assert 'token' in response_json
-      assert 'password' not in response_json
 
   def test_create_user_missing_fields(self):
     with app.test_client() as test_client:
@@ -54,11 +50,9 @@ class TestUserRoutes():
     data = {
       "name": self.SPECIALIST_NAME,
           'email': self.SPECIALIST_EMAIL,
-          'birth_day': datetime.now().date().isoformat(),
-          'city': self.SPECIALIST_CITY,
-          'phone': self.SPECIALIST_PHONE,
-          'password': self.SPECIALIST_PASSWORD,
-          "specialty": self.SPECIALIST_SPECIALTY
+          'last_name': self.SPECIALIST_LAST_NAME,
+          'username': self.SPECIALIST_USERNAME,
+          'password': self.SPECIALIST_PASSWORD
     }
     SignupSpecialist(data.copy()).execute()
 
@@ -72,11 +66,9 @@ class TestUserRoutes():
     signup_data = {
       'name': self.SPECIALIST_NAME,
       'email': self.SPECIALIST_EMAIL,
-      'birth_day': datetime.now().date().isoformat(),
-      'city': self.SPECIALIST_CITY,
-      'phone': self.SPECIALIST_PHONE,
-      'password': self.SPECIALIST_PASSWORD,
-      "specialty": self.SPECIALIST_SPECIALTY
+      'last_name': self.SPECIALIST_LAST_NAME,
+      'username': self.SPECIALIST_USERNAME,
+      'password': self.SPECIALIST_PASSWORD
     }
     SignupSpecialist(signup_data.copy()).execute()
 
@@ -102,11 +94,9 @@ class TestUserRoutes():
     signup_data = {
       'name': self.SPECIALIST_NAME,
       'email': self.SPECIALIST_EMAIL,
-      'birth_day': datetime.now().date().isoformat(),
-      'city': self.SPECIALIST_CITY,
-      'phone': self.SPECIALIST_PHONE,
-      'password': self.SPECIALIST_PASSWORD,
-      "specialty": self.SPECIALIST_SPECIALTY
+      'last_name': self.SPECIALIST_LAST_NAME,
+      'username': self.SPECIALIST_USERNAME,
+      'password': self.SPECIALIST_PASSWORD
     }
     SignupSpecialist(signup_data.copy()).execute()
 
