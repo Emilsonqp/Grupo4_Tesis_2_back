@@ -26,10 +26,6 @@ class User(Model, Base):
     self.password = argon2.hash_password(
       password.encode('utf-8')
     ).decode('utf-8')
-    self.set_token()
-
-  def set_token(self):
-    self.token = uuid4()
 
   def match_password(self, given_password):
     try:

@@ -3,6 +3,8 @@ from ..models.specialist import Specialist, SpecialistSchema, SpecialistJsonSche
 from ..session import Session
 from ..errors.errors import InvalidParams, SpecialistAlreadyExists
 from datetime import datetime
+from flask_jwt_extended import create_access_token
+from flask import has_app_context
 
 class SignupSpecialist(BaseCommannd):
   def __init__(self, data):
@@ -24,6 +26,10 @@ class SignupSpecialist(BaseCommannd):
       session.commit()
 
       new_user = SpecialistJsonSchema().dump(user)
+
+      if has_app_context():
+        access_token = create_access_token(identity=self.data['email'])
+        new_user['token'] = access_token
       session.close()
 
       return new_user

@@ -3,6 +3,8 @@ from ..models.user import User, UserSchema, UserJsonSchema
 from ..session import Session
 from ..errors.errors import InvalidParams, UserAlreadyExists
 from datetime import datetime
+from flask_jwt_extended import create_access_token
+from flask import has_app_context
 
 class SignupUser(BaseCommannd):
   def __init__(self, data):
@@ -26,6 +28,10 @@ class SignupUser(BaseCommannd):
       session.commit()
 
       new_user = UserJsonSchema().dump(user)
+      if has_app_context():
+        access_token = create_access_token(identity=self.data['email'])
+        new_user['token'] = access_token
+
       session.close()
 
       return new_user
