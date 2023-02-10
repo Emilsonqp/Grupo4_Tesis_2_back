@@ -25,3 +25,7 @@ class SpecialistWrongPassword(ApiError):
 class InvalidParams(ApiError):
     code = 400
     description = "Bad request"
+
+class Unauthorized(ApiError):
+    code = 401
+    description = "Unauthorized"

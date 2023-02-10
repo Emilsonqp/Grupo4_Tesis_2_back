@@ -34,7 +34,6 @@ class User(Model, Base):
     except:
       return False
 
-
 class UserSchema(Schema):
   id = fields.Number()
   name = fields.Str()
