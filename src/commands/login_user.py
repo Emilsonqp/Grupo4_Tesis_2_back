@@ -1,9 +1,9 @@
 from .base_command import BaseCommannd
 from ..errors.errors import InvalidUserCredentials, InvalidParams
-from ..models.user import User
+from ..models.user import User, UserJsonSchema
 from ..session import Session
 from flask_jwt_extended import create_access_token
-
+from flask import has_app_context
 
 class LoginUser(BaseCommannd):
     def __init__(self, data):
@@ -24,10 +24,14 @@ class LoginUser(BaseCommannd):
                 raise InvalidUserCredentials()
 
             access_token = create_access_token(identity=self.data['email'])
+            user = UserJsonSchema().dump(user)
+            if has_app_context():
+                access_token = create_access_token(identity=self.data['email'])
+                user['token'] = access_token
 
             session.close()
 
-            return {'token': access_token}
+            return user
         except Exception as error:
             session.close()
             raise error
