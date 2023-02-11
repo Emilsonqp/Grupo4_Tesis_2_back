@@ -3,6 +3,7 @@ from src.models.model import Base
 from src.main import app
 from datetime import datetime
 from src.commands.signup_user import SignupUser
+from src.commands.create_consult import CreateConsult
 from flask_jwt_extended import create_access_token
 import json
 
@@ -201,6 +202,38 @@ class TestUserRoutes():
         )
         json.loads(response.data)
         assert response.status_code == 404
+
+  def test_list_user_consults(self):
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=self.USER_EMAIL)
+        consult_data = {
+          "injury_type": "test",
+          "shape": "circular",
+          "injuries_count": 1,
+          "distribution": "brazo",
+          "color": "rojo",
+          "photo_url": "https://google.com/"
+        }
+        signup_data = {
+          'name': self.USER_NAME,
+          'email': self.USER_EMAIL,
+          'birth_day': datetime.now().date().isoformat(),
+          'city': self.USER_CITY,
+          'phone': self.USER_PHONE,
+          'password': self.USER_PASSWORD
+        }
+        user = SignupUser(signup_data.copy()).execute()
+        CreateConsult(user['email'], consult_data).execute()
+        response = test_client.get(
+          self.BASE_PATH + f"/{int(user['id'])}/consults", headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 200
+        assert 'id' in response_json[0]
+        assert 'created_at' in response_json[0]
 
   def teardown_method(self):
     self.session.close()

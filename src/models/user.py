@@ -45,6 +45,7 @@ class UserSchema(Schema):
 
 class UserJsonSchema(Schema):
   id = fields.Number()
+  created_at = fields.DateTime()
   name = fields.Str()
   email = fields.Str()
   birth_day = fields.DateTime()

@@ -6,6 +6,7 @@ from ..commands.signup_user import SignupUser
 from ..commands.update_user_city import UpdateUserCity
 from ..commands.list_users import ListUsers
 from ..commands.user_detail import UserDetail
+from ..commands.user_consults import UserConsults
 
 user_routes = Blueprint('user_routes', __name__)
 
@@ -37,3 +38,9 @@ def index():
 def show(id):
     user = UserDetail(id).execute()
     return jsonify(user)
+
+@user_routes.route('/users/<id>/consults', methods = ['GET'])
+@jwt_required()
+def consults(id):
+    consults = UserConsults(id).execute()
+    return jsonify(consults)

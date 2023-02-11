@@ -1,11 +1,36 @@
 from .base_command import BaseCommannd
-from ..models.specialist import Specialist
 from ..session import Session
-from ..errors.errors import InvalidParams, SpecialistIsNotRegister, SpecialistWrongPassword
+from ..errors.errors import InvalidParams, InvalidUserCredentials
+from ..models.consult import Consult, ConsultSchema, ConsultJsonSchema
+from ..models.user import User
 
 class CreateConsult(BaseCommannd):
-    def __init__(self, data):
+    def __init__(self, user_email, data):
+        self.user_email = user_email
         self.data = data
 
     def execute(self):
-      print("Initial")
+        session = Session()
+        try:
+            user = session.query(User).filter_by(email=self.user_email).first()
+            if not user:
+                raise InvalidUserCredentials()
+
+            self.data['user_id'] = user.id
+            posted_consult = ConsultSchema(
+                only=("injury_type", "shape", "injuries_count", "distribution", "color", "photo_url", "user_id")
+            ).load(self.data)
+            consult = Consult(**posted_consult)
+            session.add(consult)
+            session.commit()
+
+            new_consult = ConsultJsonSchema().dump(consult)
+            session.close()
+
+            return new_consult
+        except TypeError:
+            session.close()
+            raise InvalidParams()
+        except Exception as error:
+            session.close()
+            raise error
