@@ -29,3 +29,7 @@ class InvalidParams(ApiError):
 class Unauthorized(ApiError):
     code = 401
     description = "Unauthorized"
+
+class UserDoesNotExit(ApiError):
+    code = 404
+    description = "User does not exist"

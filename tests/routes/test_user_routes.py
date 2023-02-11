@@ -135,7 +135,72 @@ class TestUserRoutes():
         assert response.status_code == 200
         assert 'city' in response_json
 
+  def test_list_users(self):
+    signup_data = {
+      'name': self.USER_NAME,
+      'email': self.USER_EMAIL,
+      'birth_day': datetime.now().date().isoformat(),
+      'city': self.USER_CITY,
+      'phone': self.USER_PHONE,
+      'password': self.USER_PASSWORD
+    }
+    SignupUser(signup_data.copy()).execute()
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=self.USER_EMAIL)
+        response = test_client.get(
+          self.BASE_PATH, headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 200
+        assert len(response_json) == 1
+        assert 'id' in response_json[0]
 
+
+  def test_user_detail(self):
+    signup_data = {
+      'name': self.USER_NAME,
+      'email': self.USER_EMAIL,
+      'birth_day': datetime.now().date().isoformat(),
+      'city': self.USER_CITY,
+      'phone': self.USER_PHONE,
+      'password': self.USER_PASSWORD
+    }
+    user = SignupUser(signup_data.copy()).execute()
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=self.USER_EMAIL)
+        response = test_client.get(
+          self.BASE_PATH + f'/{int(user["id"])}', headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 200
+        assert 'id' in response_json
+
+  def test_user_detail_doesnt_exist(self):
+    signup_data = {
+      'name': self.USER_NAME,
+      'email': self.USER_EMAIL,
+      'birth_day': datetime.now().date().isoformat(),
+      'city': self.USER_CITY,
+      'phone': self.USER_PHONE,
+      'password': self.USER_PASSWORD
+    }
+    user = SignupUser(signup_data.copy()).execute()
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=self.USER_EMAIL)
+        response = test_client.get(
+          self.BASE_PATH + f'/10', headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        json.loads(response.data)
+        assert response.status_code == 404
 
   def teardown_method(self):
     self.session.close()
