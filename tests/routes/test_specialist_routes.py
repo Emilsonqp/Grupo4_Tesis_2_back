@@ -7,13 +7,9 @@ from sqlalchemy.orm import close_all_sessions
 import json
 import string
 import random
+from tests.utils import Utils
 
 class TestUserRoutes():
-  SPECIALIST_NAME = "Pedro"
-  SPECIALIST_EMAIL = "pedro@gmail.com"
-  SPECIALIST_LAST_NAME = "Cabra"
-  SPECIALIST_USERNAME = "p.cabra"
-  SPECIALIST_PASSWORD = "123456"
   BASE_PATH = '/specialist'
   letters = string.ascii_lowercase
   LOGIN_BASE_PATH = '/login'
@@ -26,11 +22,11 @@ class TestUserRoutes():
     with app.test_client() as test_client:
       response = test_client.post(
         self.BASE_PATH, json={
-          'name': self.SPECIALIST_NAME,
-          'email': self.SPECIALIST_EMAIL,
-          'last_name': self.SPECIALIST_LAST_NAME,
-          'username': self.SPECIALIST_USERNAME,
-          'password': self.SPECIALIST_PASSWORD
+          'name': Utils.SPECIALIST_NAME,
+          'email': Utils.SPECIALIST_EMAIL,
+          'last_name': Utils.SPECIALIST_LAST_NAME,
+          'username': Utils.SPECIALIST_USERNAME,
+          'password': Utils.SPECIALIST_PASSWORD
         }
       )
       response_json = json.loads(response.data)
@@ -48,11 +44,11 @@ class TestUserRoutes():
 
   def test_create_existing_email(self):
     data = {
-      "name": self.SPECIALIST_NAME,
-          'email': self.SPECIALIST_EMAIL,
-          'last_name': self.SPECIALIST_LAST_NAME,
-          'username': self.SPECIALIST_USERNAME,
-          'password': self.SPECIALIST_PASSWORD
+      "name": Utils.SPECIALIST_NAME,
+          'email': Utils.SPECIALIST_EMAIL,
+          'last_name': Utils.SPECIALIST_LAST_NAME,
+          'username': Utils.SPECIALIST_USERNAME,
+          'password': Utils.SPECIALIST_PASSWORD
     }
     SignupSpecialist(data.copy()).execute()
 
@@ -64,19 +60,19 @@ class TestUserRoutes():
   
   def test_login_specialist(self):
     signup_data = {
-      'name': self.SPECIALIST_NAME,
-      'email': self.SPECIALIST_EMAIL,
-      'last_name': self.SPECIALIST_LAST_NAME,
-      'username': self.SPECIALIST_USERNAME,
-      'password': self.SPECIALIST_PASSWORD
+      'name': Utils.SPECIALIST_NAME,
+      'email': Utils.SPECIALIST_EMAIL,
+      'last_name': Utils.SPECIALIST_LAST_NAME,
+      'username': Utils.SPECIALIST_USERNAME,
+      'password': Utils.SPECIALIST_PASSWORD
     }
     SignupSpecialist(signup_data.copy()).execute()
 
     with app.test_client() as test_client:
       response = test_client.post(
         self.BASE_PATH + self.LOGIN_BASE_PATH, json={
-          'email': self.SPECIALIST_EMAIL,
-          'password': self.SPECIALIST_PASSWORD
+          'email': Utils.SPECIALIST_EMAIL,
+          'password': Utils.SPECIALIST_PASSWORD
         }
       )
       response_json = json.loads(response.data)
@@ -92,18 +88,18 @@ class TestUserRoutes():
 
   def test_login_specialist_invalid_password(self):
     signup_data = {
-      'name': self.SPECIALIST_NAME,
-      'email': self.SPECIALIST_EMAIL,
-      'last_name': self.SPECIALIST_LAST_NAME,
-      'username': self.SPECIALIST_USERNAME,
-      'password': self.SPECIALIST_PASSWORD
+      'name': Utils.SPECIALIST_NAME,
+      'email': Utils.SPECIALIST_EMAIL,
+      'last_name': Utils.SPECIALIST_LAST_NAME,
+      'username': Utils.SPECIALIST_USERNAME,
+      'password': Utils.SPECIALIST_PASSWORD
     }
     SignupSpecialist(signup_data.copy()).execute()
 
     with app.test_client() as test_client:
       response = test_client.post(
         self.BASE_PATH + self.LOGIN_BASE_PATH, json={
-          'email': self.SPECIALIST_EMAIL,
+          'email': Utils.SPECIALIST_EMAIL,
           'password': ''.join(random.choice(self.letters) for _ in range(5))
         }
       )

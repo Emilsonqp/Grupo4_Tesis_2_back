@@ -6,33 +6,28 @@ from src.commands.signup_user import SignupUser
 from src.commands.create_consult import CreateConsult
 from flask_jwt_extended import create_access_token
 import json
+from tests.utils import Utils
 
 class TestUserRoutes():
-  USER_NAME = "William"
-  USER_EMAIL = "wr.ravelo@uniandes.edu.co"
-  USER_CITY = "Bogotá"
-  USER_PHONE = "12312412"
-  USER_PASSWORD = "123456"
   BASE_PATH = '/consults'
-  MEDELLIN = 'Medellin'
 
   def setup_method(self):
     Base.metadata.create_all(engine)
     self.session = Session()
     self.user_data = {
-      'name': self.USER_NAME,
-      'email': self.USER_EMAIL,
+      'name': Utils.USER_NAME,
+      'email': Utils.USER_EMAIL,
       'birth_day': datetime.now().date().isoformat(),
-      'city': self.USER_CITY,
-      'phone': self.USER_PHONE,
-      'password': self.USER_PASSWORD
+      'city': Utils.USER_CITY,
+      'phone': Utils.USER_PHONE,
+      'password': Utils.USER_PASSWORD
     }
     self.user = SignupUser(self.user_data.copy()).execute()
 
   def test_create_consult(self):
     with app.test_client() as test_client:
       with app.app_context():
-        access_token = create_access_token(identity=self.USER_EMAIL)
+        access_token = create_access_token(identity=Utils.USER_EMAIL)
         consult_data = {
           "injury_type": "test",
           "shape": "circular",
@@ -55,7 +50,7 @@ class TestUserRoutes():
   def test_create_consult_missing_fields(self):
     with app.test_client() as test_client:
       with app.app_context():
-        access_token = create_access_token(identity=self.USER_EMAIL)
+        access_token = create_access_token(identity=Utils.USER_EMAIL)
         response = test_client.post(
           self.BASE_PATH, json={},
           headers={
