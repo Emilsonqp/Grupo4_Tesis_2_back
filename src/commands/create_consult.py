@@ -18,7 +18,7 @@ class CreateConsult(BaseCommannd):
 
             self.data['user_id'] = user.id
             posted_consult = ConsultSchema(
-                only=("injury_type", "shape", "injuries_count", "distribution", "color", "photo_url", "user_id")
+                only=("injury_type", "shape", "injuries_count", "distribution", "color", "photo_url", "user_id", "specialist_id")
             ).load(self.data)
             consult = Consult(**posted_consult)
             session.add(consult)

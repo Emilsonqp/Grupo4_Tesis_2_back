@@ -15,8 +15,9 @@ class Consult(Model, Base):
   color = Column(String)
   photo_url = Column(String)
   user_id = Column(Integer)
+  specialist_id = Column(Integer)
 
-  def __init__(self, injury_type, shape, injuries_count, distribution, color, photo_url, user_id):
+  def __init__(self, injury_type, shape, injuries_count, distribution, color, photo_url, user_id, specialist_id):
     Model.__init__(self)
     self.injury_type = injury_type
     self.shape = shape
@@ -25,6 +26,7 @@ class Consult(Model, Base):
     self.color = color
     self.photo_url = photo_url
     self.user_id = user_id
+    self.specialist_id = specialist_id
 
 class ConsultSchema(Schema):
   injury_type = fields.Str()
@@ -34,6 +36,7 @@ class ConsultSchema(Schema):
   color = fields.Str()
   photo_url = fields.Str()
   user_id = fields.Number()
+  specialist_id = fields.Number()
 
 class ConsultJsonSchema(Schema):
   id = fields.Number()
@@ -45,3 +48,4 @@ class ConsultJsonSchema(Schema):
   color = fields.Str()
   photo_url = fields.Str()
   user_id = fields.Number()
+  specialist_id = fields.Number()
