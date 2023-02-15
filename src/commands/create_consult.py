@@ -14,9 +14,12 @@ class CreateConsult(BaseCommannd):
         try:
             user = session.query(User).filter_by(email=self.user_email).first()
             if not user:
+                print(user)
                 raise InvalidUserCredentials()
 
             self.data['user_id'] = user.id
+            
+            print(self.data)
             posted_consult = ConsultSchema(
                 only=("injury_type", "shape", "injuries_count", "distribution", "color", "photo_url", "user_id", "specialist_id")
             ).load(self.data)
@@ -28,9 +31,11 @@ class CreateConsult(BaseCommannd):
             session.close()
 
             return new_consult
-        except TypeError:
+        except TypeError as e:
+            print(e)
             session.close()
             raise InvalidParams()
         except Exception as error:
+            print(error)
             session.close()
             raise error

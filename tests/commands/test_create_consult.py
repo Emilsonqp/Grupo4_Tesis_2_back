@@ -35,7 +35,7 @@ class TestCreateConsult():
         "distribution": "brazo",
         "color": "rojo",
         "photo_url": "https://google.com/",
-        "specialist_id": 2
+        "specialist_id": 1
       }
       self.user = SignupUser(data).execute()
 

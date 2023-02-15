@@ -35,7 +35,8 @@ class TestUserConsults():
         "injuries_count": 1,
         "distribution": "brazo",
         "color": "rojo",
-        "photo_url": "https://google.com/"
+        "photo_url": "https://google.com/",
+        "specialist_id": 1
       }
       self.user = SignupUser(data).execute()
       self.consult = CreateConsult(self.user['email'], self.consult_data).execute()
