@@ -34,7 +34,8 @@ class TestCreateConsult():
         "injuries_count": 1,
         "distribution": "brazo",
         "color": "rojo",
-        "photo_url": "https://google.com/"
+        "photo_url": "https://google.com/",
+        "specialist_id": 2
       }
       self.user = SignupUser(data).execute()
 
