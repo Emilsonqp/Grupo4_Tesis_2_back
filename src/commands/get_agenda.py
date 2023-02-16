@@ -2,7 +2,7 @@ from .base_command import BaseCommannd
 from ..session import Session
 from ..errors.errors import InvalidParams, InvalidUserCredentials
 from ..models.consult import Consult, ConsultJsonSchema
-from ..models.user import Specialist
+from ..models.specialist import Specialist
 import json
 
 class GetAgenda(BaseCommannd):
