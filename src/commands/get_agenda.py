@@ -6,9 +6,8 @@ from ..models.user import User
 import json
 
 class GetAgenda(BaseCommannd):
-    def __init__(self, user_email, data):
+    def __init__(self, user_email):
         self.user_email = user_email
-        self.data = data
 
     def execute(self):
         session = Session()
