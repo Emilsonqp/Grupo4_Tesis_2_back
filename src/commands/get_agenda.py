@@ -1,10 +1,11 @@
 from .base_command import BaseCommannd
 from ..session import Session
 from ..errors.errors import InvalidParams, InvalidUserCredentials
-from ..models.consult import Consult, ConsultSchema, ConsultJsonSchema
+from ..models.consult import Consult, ConsultJsonSchema
 from ..models.user import User
+import json
 
-class CreateConsult(BaseCommannd):
+class GetAgenda(BaseCommannd):
     def __init__(self, user_email, data):
         self.user_email = user_email
         self.data = data
@@ -17,20 +18,12 @@ class CreateConsult(BaseCommannd):
                 print(user)
                 raise InvalidUserCredentials()
 
-            self.data['user_id'] = user.id
-            
-            print(self.data)
-            posted_consult = ConsultSchema(
-                only=("injury_type", "shape", "injuries_count", "distribution", "color", "photo_url", "user_id", "specialist_id")
-            ).load(self.data)
-            consult = Consult(**posted_consult)
-            session.add(consult)
-            session.commit()
-
-            new_consult = ConsultJsonSchema().dump(consult)
+            user_id = user.id
+            consultas = session.query(Consult).filter(Consult.specialist_id==user_id).all()
             session.close()
 
-            return new_consult
+            return [ConsultJsonSchema().dump(consulta) for consulta in consultas]
+
         except TypeError:
             session.close()
             raise InvalidParams()
