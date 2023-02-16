@@ -31,9 +31,11 @@ class CreateConsult(BaseCommannd):
             session.close()
 
             return new_consult
-        except TypeError:
+        except TypeError as e:
+            print(e)
             session.close()
             raise InvalidParams()
         except Exception as error:
+            print(error)
             session.close()
             raise error
