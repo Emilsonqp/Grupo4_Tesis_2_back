@@ -12,9 +12,9 @@ class GetAgenda(BaseCommannd):
     def execute(self):
         session = Session()
         try:
-            user = session.query(Specialist).filter_by(email=self.specialist_email).first()
-            if not user:
-                print(user)
+            specialist = session.query(Specialist).filter_by(email=self.specialist_email).first()
+            if not specialist:
+                print(specialist)
                 raise InvalidUserCredentials()
 
             user_id = 1
