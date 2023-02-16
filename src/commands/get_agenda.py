@@ -17,10 +17,12 @@ class GetAgenda(BaseCommannd):
                 print(user)
                 raise InvalidUserCredentials()
 
-            user_id = user.id
+            user_id = 1
             consultas = session.query(Consult).filter(Consult.specialist_id==user_id).all()
             session.close()
-
+            
+            if not consultas:
+                return [] 
             return [ConsultJsonSchema().dump(consulta) for consulta in consultas]
 
         except TypeError:
