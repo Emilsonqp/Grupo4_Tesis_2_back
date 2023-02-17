@@ -57,7 +57,7 @@ class TestCreateConsult():
     x = GetAgenda(self.user['email']).execute()
 
     assert 'specialist_id' in consult
-    assert len(x) == 1
+    assert len(x) == 3
 
   def test_get_consults_invalid_user(self):
     try:
