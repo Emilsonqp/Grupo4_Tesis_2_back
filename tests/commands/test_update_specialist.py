@@ -6,13 +6,14 @@ from src.models.specialist import Specialist
 from src.errors.errors import Unauthorized, InvalidParams, SpecialistAlreadyExists, SpecialistNotMatchPassword
 import argon2
 
+
 class TestUpdateSpecialist():
     SPECIALIST_NAME = "Emilson"
     SPECIALIST_LASTNAME = "Quintero"
     SPECIALIST_EMAIL = "emilsonqp@gmail.com"
     SPECIALIST_EMAIL2 = "emilsonquinterop@gmail.com"
     SPECIALIST_USERNAME = "dquintero"
-    SPECIALIST_PASSWORD = "miso1"
+    SPECIALIST_PWD = "init_pwd"
     TRUE = True
     FALSE = False
     NEW_PASSWORD = "new_password"
@@ -25,7 +26,7 @@ class TestUpdateSpecialist():
             'email': self.SPECIALIST_EMAIL,
             'last_name': self.SPECIALIST_LASTNAME,
             'username': self.SPECIALIST_USERNAME,
-            'password': self.SPECIALIST_PASSWORD
+            'password': self.SPECIALIST_PWD
         }
         self.user = SignupSpecialist(data).execute()
         data['email'] = self.SPECIALIST_EMAIL2
@@ -53,7 +54,7 @@ class TestUpdateSpecialist():
         try:
             UpdateSpecialist(self.SPECIALIST_EMAIL, {
                 'email': self.SPECIALIST_EMAIL,
-                'password': self.SPECIALIST_PASSWORD,
+                'password': self.SPECIALIST_PWD,
                 're_password': "another_password"
             }).execute()
 
@@ -65,8 +66,8 @@ class TestUpdateSpecialist():
         try:
             UpdateSpecialist("another_email@gmail.com", {
                 'email': "another_email@gmail.com",
-                'password': self.SPECIALIST_PASSWORD,
-                're_password': self.SPECIALIST_PASSWORD
+                'password': self.SPECIALIST_PWD,
+                're_password': self.SPECIALIST_PWD
             }).execute()
 
             assert self.FALSE
@@ -86,7 +87,7 @@ class TestUpdateSpecialist():
 
         sp = self.session.query(Specialist).filter_by(
             email=self.SPECIALIST_EMAIL).first()
-        pass_hash = sp.password            
+        pass_hash = sp.password
         assert ph.verify(pass_hash, self.NEW_PASSWORD.encode('utf-8'))
 
     def teardown_method(self):
