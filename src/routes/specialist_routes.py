@@ -27,7 +27,7 @@ def home():
 
 @specialist_routes.route('/specialist/profile/<id>', methods = ['GET'])
 @jwt_required()
-def getSpecialist(id):
+def get_specialist(id):
     specialist = ListSpecialistById(id).execute()
     return jsonify(specialist)
 
