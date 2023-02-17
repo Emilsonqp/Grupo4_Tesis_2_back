@@ -4,7 +4,7 @@ from ..errors.errors import InvalidParams, InvalidUserCredentials
 from ..models.consult import Consult, ConsultJsonSchema
 from ..models.specialist import Specialist
 import json
-
+from flask import jsonify
 class GetAgenda(BaseCommannd):
     def __init__(self, user_email):
         self.specialist_email = user_email
@@ -21,13 +21,12 @@ class GetAgenda(BaseCommannd):
             consultas = session.query(Consult).filter(Consult.specialist_id==user_id).all()
             session.close()
             
-            if not consultas:
-                return [] 
-            return [ConsultJsonSchema().dump(consulta) for consulta in consultas]
+            return ConsultJsonSchema(many=True).dump(consultas)
 
         except TypeError:
             session.close()
             raise InvalidParams()
         except Exception as error:
             session.close()
+            print(error)
             raise error

@@ -9,4 +9,5 @@ agenda_specialist_routes = Blueprint('agenda_specialist_routes', __name__)
 def create():
     current_email = get_jwt_identity()
     consult = GetAgenda(current_email).execute()
+    return jsonify(consult), 200
     
