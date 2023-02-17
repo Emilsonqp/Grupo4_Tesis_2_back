@@ -13,3 +13,4 @@ flask_wtf
 argon2-cffi
 Flask-JWT-Extended
 flask-cors
+validx
