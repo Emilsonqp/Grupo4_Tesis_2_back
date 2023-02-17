@@ -208,7 +208,8 @@ class TestUserRoutes():
           "injuries_count": 1,
           "distribution": "brazo",
           "color": "rojo",
-          "photo_url": "https://google.com/"
+          "photo_url": "https://google.com/",
+          "specialist_id": 1
         }
         signup_data = {
           'name': Utils.USER_NAME,
@@ -229,6 +230,53 @@ class TestUserRoutes():
         assert response.status_code == 200
         assert 'id' in response_json[0]
         assert 'created_at' in response_json[0]
+
+  def test_user_detail_update(self):
+    signup_data = {
+      'name': Utils.USER_NAME,
+      'email': Utils.USER_EMAIL,
+      'birth_day': datetime.now().date().isoformat(),
+      'city': Utils.USER_CITY,
+      'phone': Utils.USER_PHONE,
+      'password': Utils.USER_PASSWORD
+    }
+    user = SignupUser(signup_data.copy()).execute()
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.USER_EMAIL)
+        response = test_client.put(
+          self.BASE_PATH + f'/{int(user["id"])}', headers={
+            'Authorization': f"Bearer {access_token}"
+          }, json={
+            'name': Utils.USER_NAME + '_updated'
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 200
+        assert 'name' in response_json
+        assert response_json['name'] == Utils.USER_NAME + '_updated'
+
+  def test_user_detail_update_invalid_fields(self):
+    signup_data = {
+      'name': Utils.USER_NAME,
+      'email': Utils.USER_EMAIL,
+      'birth_day': datetime.now().date().isoformat(),
+      'city': Utils.USER_CITY,
+      'phone': Utils.USER_PHONE,
+      'password': Utils.USER_PASSWORD
+    }
+    user = SignupUser(signup_data.copy()).execute()
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.USER_EMAIL)
+        response = test_client.put(
+          self.BASE_PATH + f'/{int(user["id"])}', headers={
+            'Authorization': f"Bearer {access_token}"
+          }, json={
+            'another_field': 'test'
+          }
+        )
+        assert response.status_code == 400
 
   def teardown_method(self):
     self.session.close()

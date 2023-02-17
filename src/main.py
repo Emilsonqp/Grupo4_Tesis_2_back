@@ -7,6 +7,7 @@ from .models.model import Base
 from .routes.base_routes import base_routes
 from .routes.user_routes import user_routes
 from .routes.specialist_routes import specialist_routes
+from .routes.agenda_routes import agenda_specialist_routes
 from .routes.consult_routes import consult_routes
 from .errors.errors import ApiError
 from flask_jwt_extended import JWTManager
@@ -18,6 +19,8 @@ app.register_blueprint(base_routes)
 app.register_blueprint(user_routes)
 app.register_blueprint(specialist_routes)
 app.register_blueprint(consult_routes)
+app.register_blueprint(agenda_specialist_routes)
+
 app.config['JWT_SECRET_KEY'] = os.environ['JWT_SECRET_KEY'] if 'JWT_SECRET_KEY' in os.environ else 'ROCK&ROLL_TRAIN_ACDC'
 
 cors = CORS(app)

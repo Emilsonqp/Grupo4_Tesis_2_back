@@ -34,7 +34,8 @@ class TestUserRoutes():
           "injuries_count": 1,
           "distribution": "brazo",
           "color": "rojo",
-          "photo_url": "https://google.com/"
+          "photo_url": "https://google.com/",
+          "specialist_id":  1
         }
         response = test_client.post(
           self.BASE_PATH, json=consult_data,
