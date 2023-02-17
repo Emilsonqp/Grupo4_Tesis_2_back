@@ -2,6 +2,7 @@ from .base_command import BaseCommannd
 from ..models.specialist import Specialist, SpecialistSchema, SpecialistJsonSchema
 from ..session import Session
 from ..errors.errors import InvalidParams, SpecialistAlreadyExists, Unauthorized, SpecialistNotMatchPassword
+import argon2
 
 class UpdateSpecialist(BaseCommannd):
   def __init__(self, sp_email, data):
@@ -10,6 +11,7 @@ class UpdateSpecialist(BaseCommannd):
   
   def execute(self):
     session = Session()
+    ph = argon2.PasswordHasher()
     try:
       if 'email' not in self.data:
         raise InvalidParams()
@@ -33,7 +35,7 @@ class UpdateSpecialist(BaseCommannd):
       specialist.last_name = self.data['last_name']
       specialist.email = self.data['email']
       specialist.username = self.data['username']
-      specialist.password = self.data['password']
+      specialist.password = ph.hash(self.data['password'].encode('utf-8'))
       session.commit()
 
       specialist = SpecialistJsonSchema().dump(specialist)

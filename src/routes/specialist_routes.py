@@ -1,7 +1,7 @@
 from flask import jsonify, Blueprint, request
 from ..commands.signup_specialist import SignupSpecialist
 from ..commands.login_specialist import LoginSpecialist
-from ..commands.list_specialists import ListSpecialistByEmail
+from ..commands.list_specialists import ListSpecialistById
 from ..commands.update_specialist import UpdateSpecialist
 from flask_jwt_extended import unset_jwt_cookies, jwt_required, get_jwt_identity
 
@@ -25,10 +25,10 @@ def home():
     }
     return response_body
 
-@specialist_routes.route('/specialist/profile/<current_email>', methods = ['GET'])
+@specialist_routes.route('/specialist/profile/<id>', methods = ['GET'])
 @jwt_required()
-def getSpecialist(current_email):
-    specialist = ListSpecialistByEmail(current_email).execute()
+def getSpecialist(id):
+    specialist = ListSpecialistById(id).execute()
     return jsonify(specialist)
 
 @specialist_routes.route('/specialist/update_profile', methods = ['PUT'])

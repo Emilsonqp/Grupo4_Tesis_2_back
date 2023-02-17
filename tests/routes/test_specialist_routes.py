@@ -7,6 +7,7 @@ from sqlalchemy.orm import close_all_sessions
 import json
 import string
 import random
+from flask_jwt_extended import create_access_token
 from tests.utils import Utils
 
 class TestUserRoutes():
@@ -104,6 +105,55 @@ class TestUserRoutes():
         }
       )
       assert response.status_code == 401
+
+  def test_update_specialist(self):
+    signup_data = {
+      'name': Utils.SPECIALIST_NAME,
+      'email': Utils.SPECIALIST_EMAIL,
+      'last_name': Utils.SPECIALIST_LAST_NAME,
+      'username': Utils.SPECIALIST_USERNAME,
+      'password': Utils.SPECIALIST_PASSWORD
+    }
+    SignupSpecialist(signup_data.copy()).execute()
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.SPECIALIST_EMAIL)
+        response = test_client.put(
+          self.BASE_PATH + '/update_profile', json={
+            'name': Utils.SPECIALIST_NAME,
+            'email': Utils.SPECIALIST_EMAIL,
+            'last_name': Utils.SPECIALIST_LAST_NAME,
+            'username': Utils.SPECIALIST_USERNAME,
+            'password': Utils.SPECIALIST_NEWPASSWORD,
+            're_password': Utils.SPECIALIST_NEWPASSWORD
+          }, headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 200
+        assert 'token' in response_json
+
+  def test_list_specialist_detail(self):
+    signup_data = {
+      'name': Utils.SPECIALIST_NAME,
+      'email': Utils.SPECIALIST_EMAIL,
+      'last_name': Utils.SPECIALIST_LAST_NAME,
+      'username': Utils.SPECIALIST_USERNAME,
+      'password': Utils.SPECIALIST_PASSWORD
+    }
+    sp = SignupSpecialist(signup_data.copy()).execute()
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.SPECIALIST_EMAIL)
+        response = test_client.get(
+          self.BASE_PATH + '/profile' + f'/{int(sp["id"])}', headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 200
+        assert 'id' in response_json
 
   def teardown_method(self):
     close_all_sessions()

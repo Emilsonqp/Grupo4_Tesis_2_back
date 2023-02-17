@@ -12,14 +12,14 @@ class ListSpecialists(BaseCommannd):
 
         return sp
 
-class ListSpecialistByEmail(BaseCommannd):
-    def __init__(self, sp_email):
-        self.sp_email = sp_email
+class ListSpecialistById(BaseCommannd):
+    def __init__(self, sp_id):
+        self.sp_id = sp_id
 
     def execute(self):        
         session = Session()
         sp = session.query(Specialist).filter_by(
-            email=self.sp_email).first()        
+            id=self.sp_id).first()        
         if not sp:
             session.close()
             raise SpecialistIsNotRegister()
