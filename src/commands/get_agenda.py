@@ -20,7 +20,6 @@ class GetAgenda(BaseCommannd):
 
             user_id = 1
             consultas = session.query(Consult).filter(Consult.specialist_id==user_id).all()
-            session.close()
 
             response = []
             for consulta in consultas:
@@ -32,6 +31,7 @@ class GetAgenda(BaseCommannd):
                 c["user_email"] = u.email
                 response.append(c)
 
+            session.close()
             return response
 
         except TypeError:
