@@ -1,8 +1,9 @@
 from .base_command import BaseCommannd
 from ..session import Session
 from ..errors.errors import InvalidParams, InvalidUserCredentials
-from ..models.consult import Consult, ConsultJsonSchema
+from ..models.consult import Consult, ConsultJsonSchema, ConsultJsonSchemaReadable
 from ..models.specialist import Specialist
+from ..models.user import User
 import json
 from flask import jsonify
 class GetAgenda(BaseCommannd):
@@ -20,8 +21,18 @@ class GetAgenda(BaseCommannd):
             user_id = 1
             consultas = session.query(Consult).filter(Consult.specialist_id==user_id).all()
             session.close()
-            
-            return ConsultJsonSchema(many=True).dump(consultas)
+
+            response = []
+            for consulta in consultas:
+                c = ConsultJsonSchemaReadable().dump(consulta)
+                print(specialist)
+                c["specialist_name"] = specialist.name + " " + specialist.last_name
+                u = session.query(User).filter_by(id=consulta.user_id).first() 
+                c["user_name"] = u.name
+                c["user_email"] = u.email
+                response.append(c)
+
+            return response
 
         except TypeError:
             session.close()

@@ -49,3 +49,16 @@ class ConsultJsonSchema(Schema):
   photo_url = fields.Str()
   user_id = fields.Number()
   specialist_id = fields.Number()
+
+class ConsultJsonSchemaReadable(Schema):
+  id = fields.Number()
+  created_at = fields.DateTime()
+  injury_type = fields.Str()
+  shape = fields.Str()
+  injuries_count = fields.Number()
+  distribution = fields.Str()
+  color = fields.Str()
+  photo_url = fields.Str()
+  user_name = fields.Str()
+  user_email = fields.Str()
+  specialist_name = fields.Str()
