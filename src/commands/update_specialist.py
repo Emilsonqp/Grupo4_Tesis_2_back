@@ -1,5 +1,5 @@
 from .base_command import BaseCommannd
-from ..models.specialist import Specialist, SpecialistSchema, SpecialistJsonSchema
+from ..models.specialist import Specialist, SpecialistJsonSchema
 from ..session import Session
 from ..errors.errors import InvalidParams, SpecialistAlreadyExists, Unauthorized, SpecialistNotMatchPassword
 import argon2
@@ -13,17 +13,16 @@ class UpdateSpecialist(BaseCommannd):
     session = Session()
     ph = argon2.PasswordHasher()
     try:
-      if 'email' not in self.data:
-        raise InvalidParams()
-    
       if (self.sp_email != self.data['email']):
         if self.email_exist(session, self.data['email']):
           session.close()
           raise SpecialistAlreadyExists()
-        
-      if (self.data['password'] != self.data['re_password']):
-        session.close()
-        raise SpecialistNotMatchPassword()
+
+      pwd_to_change = self.data['password'].replace(" ", "")
+      if len(pwd_to_change) > 0 or len(self.data['re_password'].replace(" ", "")):
+        if (pwd_to_change != self.data['re_password'].replace(" ", "")):
+          session.close()
+          raise SpecialistNotMatchPassword()
   
       specialist = session.query(Specialist).filter_by(email=self.sp_email).first()
 
@@ -31,11 +30,12 @@ class UpdateSpecialist(BaseCommannd):
         session.close()
         raise Unauthorized()
       
-      specialist.name = self.data['name']
-      specialist.last_name = self.data['last_name']
-      specialist.email = self.data['email']
-      specialist.username = self.data['username']
-      specialist.password = ph.hash(self.data['password'].encode('utf-8'))
+      if specialist.name != self.data['name'] : specialist.name = self.data['name']
+      if specialist.last_name != self.data['last_name'] : specialist.last_name = self.data['last_name']
+      if specialist.email != self.data['email'] : specialist.email = self.data['email']
+      if specialist.username != self.data['username'] : specialist.username = self.data['username']
+      pass_hash = specialist.password
+      if len(pwd_to_change) > 0 : ph.verify(pass_hash, pwd_to_change.encode('utf-8'))
       session.commit()
 
       specialist = SpecialistJsonSchema().dump(specialist)
@@ -44,6 +44,13 @@ class UpdateSpecialist(BaseCommannd):
       return specialist
     except TypeError:
       raise InvalidParams()
+    except (argon2.exceptions.VerifyMismatchError, argon2.exceptions.VerificationError, argon2.exceptions.InvalidHash):
+      specialist.password = ph.hash(pwd_to_change.encode('utf-8'))
+      session.commit()
+      
+      specialist = SpecialistJsonSchema().dump(specialist)
+      session.close()
+      return specialist
     except Exception as error:
       session.close()
       raise error
