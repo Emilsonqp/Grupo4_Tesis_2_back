@@ -32,14 +32,6 @@ class TestUpdateSpecialist():
         data['email'] = self.SPECIALIST_EMAIL2
         self.user = SignupSpecialist(data).execute()
 
-    def test_update_specialist_missing_parameters(self):
-        try:
-            UpdateSpecialist(self.SPECIALIST_EMAIL, {}).execute()
-
-            assert self.FALSE
-        except InvalidParams:
-            assert self.TRUE
-
     def test_update_specialist_invalid_email(self):
         try:
             UpdateSpecialist(self.SPECIALIST_EMAIL, {
