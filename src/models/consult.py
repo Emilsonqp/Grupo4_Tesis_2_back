@@ -45,7 +45,7 @@ class ConsultSchema(Schema):
   automatic = fields.Boolean()
   specialist_id = fields.Number(allow_none=True)
   city = fields.Str()
-  status = fields.Number()
+  status = fields.Integer()
 
 class ConsultJsonSchema(Schema):
   id = fields.Number()
@@ -60,7 +60,7 @@ class ConsultJsonSchema(Schema):
   automatic = fields.Boolean()
   specialist_id = fields.Number()
   city = fields.Str()
-  status = fields.Number()
+  status = fields.Integer()
 
 class ConsultJsonSchemaReadable(Schema):
   id = fields.Number()
@@ -76,4 +76,4 @@ class ConsultJsonSchemaReadable(Schema):
   automatic = fields.Boolean()
   specialist_name = fields.Str()
   city = fields.Str()
-  status = fields.Number()
+  status = fields.Integer()
