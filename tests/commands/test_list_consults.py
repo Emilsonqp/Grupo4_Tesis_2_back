@@ -46,6 +46,7 @@ class TestCreateConsult():
         "distribution": "brazo",
         "color": "rojo",
         "photo_url": "https://google.com/",
+        "automatic": False,
         "specialist_id": 1
       }
 

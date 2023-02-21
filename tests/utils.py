@@ -5,6 +5,7 @@ class Utils:
   USER_PHONE = "12312412"
   USER_PASSWORD = "123456"
   MEDELLIN = 'Medellin'
+  BOGOTA = 'Bogota'
   SPECIALIST_NAME = "Pedro"
   SPECIALIST_EMAIL = "pedro@gmail.com"
   SPECIALIST_LAST_NAME = "Cabra"

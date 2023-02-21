@@ -35,6 +35,7 @@ class TestUserRoutes():
           "distribution": "brazo",
           "color": "rojo",
           "photo_url": "https://google.com/",
+          "automatic": False,
           "specialist_id":  1
         }
         response = test_client.post(
@@ -60,6 +61,55 @@ class TestUserRoutes():
         )
         json.loads(response.data)
         assert response.status_code == 400
+
+  def test_get_consults(self):
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.USER_EMAIL)
+        consult_data = {
+          "injury_type": "test",
+          "shape": "circular",
+          "injuries_count": 1,
+          "distribution": "brazo",
+          "color": "rojo",
+          "photo_url": "https://google.com/",
+          "automatic": False
+        }
+        CreateConsult(Utils.USER_EMAIL, consult_data).execute()
+        response = test_client.get(
+          self.BASE_PATH, headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 200
+        assert len(response_json) == 1
+        assert 'id' in response_json[0]
+        assert 'created_at' in response_json[0]
+
+  def test_get_consult(self):
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.USER_EMAIL)
+        consult_data = {
+          "injury_type": "test",
+          "shape": "circular",
+          "injuries_count": 1,
+          "distribution": "brazo",
+          "color": "rojo",
+          "photo_url": "https://google.com/",
+          "automatic": False
+        }
+        consult = CreateConsult(Utils.USER_EMAIL, consult_data).execute()
+        response = test_client.get(
+          f"{self.BASE_PATH}/{int(consult['id'])}", headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 200
+        assert 'id' in response_json
+        assert 'created_at' in response_json
 
   def teardown_method(self):
     self.session.close()

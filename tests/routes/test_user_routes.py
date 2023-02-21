@@ -209,7 +209,8 @@ class TestUserRoutes():
           "distribution": "brazo",
           "color": "rojo",
           "photo_url": "https://google.com/",
-          "specialist_id": 1
+          "automatic": False,
+          "specialist_id": None
         }
         signup_data = {
           'name': Utils.USER_NAME,

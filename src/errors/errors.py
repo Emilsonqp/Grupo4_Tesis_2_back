@@ -34,6 +34,10 @@ class UserDoesNotExit(ApiError):
     code = 404
     description = "User does not exist"
 
+class ConsultDoesNotExist(ApiError):
+    code = 404
+    description = "Consult does not exist"
+
 class SpecialistNotMatchPassword(ApiError):
     code = 400
     description = "Error confirmando la contraseña"

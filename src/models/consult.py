@@ -1,5 +1,5 @@
 from marshmallow import  Schema, fields
-from sqlalchemy import Column, String, DateTime, Integer
+from sqlalchemy import Column, String, DateTime, Integer, Boolean
 from .model import Model, Base
 from datetime import datetime, timedelta
 from uuid import uuid4
@@ -15,9 +15,10 @@ class Consult(Model, Base):
   color = Column(String)
   photo_url = Column(String)
   user_id = Column(Integer)
-  specialist_id = Column(Integer)
+  automatic = Column(Boolean)
+  specialist_id = Column(Integer, nullable=True)
 
-  def __init__(self, injury_type, shape, injuries_count, distribution, color, photo_url, user_id, specialist_id):
+  def __init__(self, injury_type, shape, injuries_count, distribution, color, photo_url, user_id, automatic, specialist_id = None):
     Model.__init__(self)
     self.injury_type = injury_type
     self.shape = shape
@@ -26,6 +27,7 @@ class Consult(Model, Base):
     self.color = color
     self.photo_url = photo_url
     self.user_id = user_id
+    self.automatic = automatic
     self.specialist_id = specialist_id
 
 class ConsultSchema(Schema):
@@ -36,7 +38,8 @@ class ConsultSchema(Schema):
   color = fields.Str()
   photo_url = fields.Str()
   user_id = fields.Number()
-  specialist_id = fields.Number()
+  automatic = fields.Boolean()
+  specialist_id = fields.Number(allow_none=True)
 
 class ConsultJsonSchema(Schema):
   id = fields.Number()
@@ -48,6 +51,7 @@ class ConsultJsonSchema(Schema):
   color = fields.Str()
   photo_url = fields.Str()
   user_id = fields.Number()
+  automatic = fields.Boolean()
   specialist_id = fields.Number()
 
 class ConsultJsonSchemaReadable(Schema):
@@ -61,4 +65,5 @@ class ConsultJsonSchemaReadable(Schema):
   photo_url = fields.Str()
   user_name = fields.Str()
   user_email = fields.Str()
+  automatic = fields.Boolean()
   specialist_name = fields.Str()
