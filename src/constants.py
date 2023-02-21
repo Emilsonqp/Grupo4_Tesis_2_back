@@ -1,0 +1,4 @@
+class Constants:
+  STATUS_PENDING = 0
+  STATUS_CONFIRMED = 1
+  STATUS_REJECTED = 2

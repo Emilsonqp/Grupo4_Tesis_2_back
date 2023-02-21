@@ -17,8 +17,10 @@ class Consult(Model, Base):
   user_id = Column(Integer)
   automatic = Column(Boolean)
   specialist_id = Column(Integer, nullable=True)
+  city = Column(String)
+  status = Column(Integer) # 0: PENDING, 1: CONFIRMED, 2: REJECTED
 
-  def __init__(self, injury_type, shape, injuries_count, distribution, color, photo_url, user_id, automatic, specialist_id = None):
+  def __init__(self, injury_type, shape, injuries_count, distribution, color, photo_url, user_id, automatic, city, status, specialist_id = None):
     Model.__init__(self)
     self.injury_type = injury_type
     self.shape = shape
@@ -28,6 +30,8 @@ class Consult(Model, Base):
     self.photo_url = photo_url
     self.user_id = user_id
     self.automatic = automatic
+    self.city = city
+    self.status = status
     self.specialist_id = specialist_id
 
 class ConsultSchema(Schema):
@@ -40,6 +44,8 @@ class ConsultSchema(Schema):
   user_id = fields.Number()
   automatic = fields.Boolean()
   specialist_id = fields.Number(allow_none=True)
+  city = fields.Str()
+  status = fields.Number()
 
 class ConsultJsonSchema(Schema):
   id = fields.Number()
@@ -53,6 +59,8 @@ class ConsultJsonSchema(Schema):
   user_id = fields.Number()
   automatic = fields.Boolean()
   specialist_id = fields.Number()
+  city = fields.Str()
+  status = fields.Number()
 
 class ConsultJsonSchemaReadable(Schema):
   id = fields.Number()
@@ -67,3 +75,5 @@ class ConsultJsonSchemaReadable(Schema):
   user_email = fields.Str()
   automatic = fields.Boolean()
   specialist_name = fields.Str()
+  city = fields.Str()
+  status = fields.Number()

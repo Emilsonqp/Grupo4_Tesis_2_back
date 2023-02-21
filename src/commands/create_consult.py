@@ -3,6 +3,7 @@ from ..session import Session
 from ..errors.errors import InvalidParams, InvalidUserCredentials
 from ..models.consult import Consult, ConsultSchema, ConsultJsonSchema
 from ..models.user import User
+from ..constants import Constants
 
 class CreateConsult(BaseCommannd):
     def __init__(self, user_email, data):
@@ -18,11 +19,13 @@ class CreateConsult(BaseCommannd):
                 raise InvalidUserCredentials()
 
             self.data['user_id'] = user.id
+            self.data['city'] = user.city
+            self.data['status'] = Constants.STATUS_PENDING
             
             posted_consult = ConsultSchema(
                 only=(
                     "injury_type", "shape", "injuries_count", "distribution", "color",
-                    "photo_url", "user_id", "automatic", "specialist_id"
+                    "photo_url", "user_id", "automatic", "specialist_id", "city", "status"
                 )
             ).load(self.data)
             consult = Consult(**posted_consult)
