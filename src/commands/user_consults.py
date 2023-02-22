@@ -10,7 +10,7 @@ class UserConsults(BaseCommannd):
 
     def execute(self):
       session = Session()
-      consults = session.query(Consult).filter_by(user_id=self.user_id).all()
+      consults = session.query(Consult).filter_by(user_id=self.user_id).order_by(Consult.created_at.desc())
       consults = ConsultJsonSchema(many=True).dump(consults)
       session.close()
 
