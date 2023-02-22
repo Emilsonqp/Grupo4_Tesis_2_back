@@ -19,8 +19,9 @@ class Consult(Model, Base):
   specialist_id = Column(Integer, nullable=True)
   city = Column(String)
   status = Column(Integer) # 0: PENDING, 1: CONFIRMED, 2: REJECTED
+  diagnosis = Column(String, nullable=True)
 
-  def __init__(self, injury_type, shape, injuries_count, distribution, color, photo_url, user_id, automatic, city, status, specialist_id = None):
+  def __init__(self, injury_type, shape, injuries_count, distribution, color, photo_url, user_id, automatic, city, status, specialist_id = None, diagnosis = None):
     Model.__init__(self)
     self.injury_type = injury_type
     self.shape = shape
@@ -33,6 +34,7 @@ class Consult(Model, Base):
     self.city = city
     self.status = status
     self.specialist_id = specialist_id
+    self.diagnosis = diagnosis
 
 class ConsultSchema(Schema):
   injury_type = fields.Str()
@@ -46,6 +48,7 @@ class ConsultSchema(Schema):
   specialist_id = fields.Number(allow_none=True)
   city = fields.Str()
   status = fields.Integer()
+  diagnosis = fields.Str()
 
 class ConsultJsonSchema(Schema):
   id = fields.Number()
@@ -61,6 +64,7 @@ class ConsultJsonSchema(Schema):
   specialist_id = fields.Number()
   city = fields.Str()
   status = fields.Integer()
+  diagnosis = fields.Str()
 
 class ConsultJsonSchemaReadable(Schema):
   id = fields.Number()
@@ -77,3 +81,4 @@ class ConsultJsonSchemaReadable(Schema):
   specialist_name = fields.Str()
   city = fields.Str()
   status = fields.Integer()
+  diagnosis = fields.Str()

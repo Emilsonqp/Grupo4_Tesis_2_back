@@ -29,6 +29,10 @@ class CreateConsult(BaseCommannd):
                 )
             ).load(self.data)
             consult = Consult(**posted_consult)
+
+            if consult.automatic:
+                consult.diagnosis = Constants.DEFAULT_AUTOMATIC_DIAGNOSIS
+
             session.add(consult)
             session.commit()
 
