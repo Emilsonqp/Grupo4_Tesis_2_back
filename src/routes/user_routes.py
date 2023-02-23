@@ -57,4 +57,4 @@ def show(id):
 @jwt_required()
 def consults(id):
     consults = UserConsults(id).execute()
-    return jsonify({ "mssg": "Mi error", "msg": "Mi error" }), 500
+    return jsonify(consults)
