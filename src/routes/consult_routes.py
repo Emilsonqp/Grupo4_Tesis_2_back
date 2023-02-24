@@ -4,6 +4,7 @@ from ..commands.create_consult import CreateConsult
 from ..commands.user_consults import UserConsults
 from ..commands.get_user_by_email import GetUserByEmail
 from ..commands.get_consult import GetConsult
+from ..commands.update_consult_status import UpdateConsultStatus
 
 consult_routes = Blueprint('consult_routes', __name__)
 
@@ -26,4 +27,10 @@ def index():
 @jwt_required()
 def show(id):
     consult = GetConsult(id).execute()
+    return jsonify(consult)
+
+@consult_routes.route('/consults/<id>', methods=['PUT'])
+@jwt_required()
+def update(id):
+    consult = UpdateConsultStatus(id, request.get_json()).execute()
     return jsonify(consult)
