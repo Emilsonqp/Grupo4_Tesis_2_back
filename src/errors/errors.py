@@ -38,6 +38,10 @@ class ConsultDoesNotExist(ApiError):
     code = 404
     description = "Consult does not exist"
 
+class ConsultWithoutDiagnosis(ApiError):
+    code = 412
+    description = "Consult does not have diagnosis yet"
+
 class SpecialistNotMatchPassword(ApiError):
     code = 400
     description = "Error confirmando la contraseña"

@@ -111,6 +111,32 @@ class TestUserRoutes():
         assert 'id' in response_json
         assert 'created_at' in response_json
 
+  def test_update_consult_status(self):
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.USER_EMAIL)
+        consult_data = {
+          "injury_type": "test",
+          "shape": "circular",
+          "injuries_count": 1,
+          "distribution": "brazo",
+          "color": "rojo",
+          "photo_url": "https://google.com/",
+          "automatic": True
+        }
+        consult = CreateConsult(Utils.USER_EMAIL, consult_data).execute()
+        response = test_client.put(
+          f"{self.BASE_PATH}/{int(consult['id'])}", headers={
+            'Authorization': f"Bearer {access_token}"
+          }, json={
+            'status': 1
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 200
+        assert 'id' in response_json
+        assert response_json['status'] == 1
+
   def teardown_method(self):
     self.session.close()
     Base.metadata.drop_all(bind=engine)
