@@ -1,10 +1,14 @@
 from flask import jsonify, Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
+
+from ..commands.get_consults_by_filters import GetConsultsByFilters
 from ..commands.create_consult import CreateConsult
 from ..commands.user_consults import UserConsults
 from ..commands.get_user_by_email import GetUserByEmail
-from ..commands.get_consult import GetConsult
+from ..commands.get_consult import GetConsult, GetPendingConsults
 from ..commands.update_consult_status import UpdateConsultStatus
+from ..commands.get_specialist_by_email import GetSpecialistByEmail
+from ..commands.get_confirmed_consults import GetConfirmedConsults
 
 consult_routes = Blueprint('consult_routes', __name__)
 
@@ -28,6 +32,28 @@ def index():
 def show(id):
     consult = GetConsult(id).execute()
     return jsonify(consult)
+
+@consult_routes.route('/pending_consults', methods=['GET'])
+@jwt_required()
+def showAllConsults():
+    consult = GetPendingConsults().execute()
+    return jsonify(consult)
+
+@consult_routes.route('/confirmed_consults', methods=['GET'])
+@jwt_required()
+def showConfirmed():
+    current_email = get_jwt_identity()
+    specialist = GetSpecialistByEmail(current_email).execute()
+    consults = GetConfirmedConsults(specialist['id']).execute()
+    return jsonify(consults)
+
+@consult_routes.route('/consults_by_filters', methods=['GET'])
+@jwt_required()
+def showFilter():
+    current_email = get_jwt_identity()
+    specialist = GetSpecialistByEmail(current_email).execute()
+    consults = GetConsultsByFilters(specialist['id']).execute()
+    return jsonify(consults)
 
 @consult_routes.route('/consults/<id>', methods=['PUT'])
 @jwt_required()
