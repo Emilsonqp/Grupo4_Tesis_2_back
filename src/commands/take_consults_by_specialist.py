@@ -17,7 +17,6 @@ class TakeConsults(BaseCommannd):
   def execute(self):
     session = Session()
     try:
-      print(str(len(self.data['id_consults'])))
       if (len(self.data['id_consults']) == 0):
           session.close()
           raise TypeError()

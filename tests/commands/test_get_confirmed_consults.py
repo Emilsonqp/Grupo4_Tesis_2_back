@@ -1,7 +1,9 @@
+from src.commands.get_confirmed_consults import GetConfirmedConsults
 from src.commands.signup_user import SignupUser
 from src.commands.create_consult import CreateConsult
 from src.commands.signup_specialist import SignupSpecialist
 from src.commands.get_consult import GetConsult, GetPendingConsults
+from src.commands.update_consult_status import UpdateConsultStatus
 from src.constants import Constants
 from src.session import Session, engine
 from src.models.model import Base
@@ -11,29 +13,29 @@ from src.errors.errors import ConsultDoesNotExist
 from datetime import datetime
 from tests.utils import Utils
 
-class TestGetConsult():
+class TestGetConfirmedConsults():
   def setup_method(self):
       Base.metadata.create_all(engine)
       self.session = Session()
 
-  def test_get_consult_without_specialist(self):
-    user = self.create_user()
-    consult = self.create_consult(user['email'], None)
-    consult = GetConsult(consult['id']).execute()
-    assert 'id' in consult
-
   def test_get_consult_with_specialist(self):
-    user = self.create_user()
-    specialist = self.create_specialist()
-    consult = self.create_consult(user['email'], specialist['id'])
-    consult = GetConsult(consult['id']).execute()
-    assert 'id' in consult
+    try:
+      user = self.create_user()
+      specialist = self.create_specialist()
+      consult = self.create_confirmed_consult(user['email'], specialist['id'])
+      consult['status'] = Constants.STATUS_CONFIRMED
+      consult = UpdateConsultStatus(consult['id'], consult).execute()
+      GetConfirmedConsults(specialist['id']).execute()
+      assert True
+    except ConsultDoesNotExist:
+      assert False
 
   def test_get_consult_does_not_exist(self):
     try:
       user = self.create_user()
-      consult = self.create_consult(user['email'], None)
-      GetConsult(consult['id'] + 1).execute()
+      specialist = self.create_specialist()
+      consult = self.create_confirmed_consult(user['email'], None)
+      GetConfirmedConsults(specialist['id'] + 1).execute()
       assert False
     except ConsultDoesNotExist:
       assert True
@@ -59,7 +61,7 @@ class TestGetConsult():
     }
     return SignupSpecialist(specialist_data).execute()
 
-  def create_consult(self, user_email, specialist_id):
+  def create_confirmed_consult(self, user_email, specialist_id):
     consult_data = {
       "injury_type": "test",
       "shape": "circular",
@@ -67,41 +69,8 @@ class TestGetConsult():
       "distribution": "brazo",
       "color": "rojo",
       "photo_url": "https://google.com/",
-      "automatic": False,
+      "automatic": True,
       "specialist_id": specialist_id
-    }
-    return CreateConsult(user_email, consult_data).execute()
-
-  def test_get_pending_consults(self):
-    try:
-      user = self.create_user()
-      consult = self.create_pending_consult(user['email'], None)
-      response = GetPendingConsults().execute()
-      assert True
-    except ConsultDoesNotExist:
-      assert False
-
-  def test_get_not_pending_consults(self):
-    try:
-      user = self.create_user()
-      specialist = self.create_specialist()
-      consult = self.create_pending_consult(user['email'], specialist['id'])
-      GetPendingConsults().execute()
-      assert False
-    except ConsultDoesNotExist:
-      assert True
-
-  def create_pending_consult(self, user_email, specialist_id):
-    consult_data = {
-      "injury_type": "test",
-      "shape": "circular",
-      "injuries_count": 1,
-      "distribution": "brazo",
-      "color": "rojo",
-      "photo_url": "https://google.com/",
-      "automatic": False,
-      "specialist_id": specialist_id,
-      "status": Constants.STATUS_PENDING
     }
     return CreateConsult(user_email, consult_data).execute()
 
