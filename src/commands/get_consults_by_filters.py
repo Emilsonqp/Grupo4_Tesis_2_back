@@ -19,42 +19,38 @@ class GetConsultsByFilters(BaseCommannd):
 
     def execute(self):
         session = Session()
-        try:
-            if ((self.startDate == '') and (self.injury_type == '')):
-                  consults = session.query(Consult).filter_by(
-                    status=Constants.STATUS_CONFIRMED, specialist_id=self.specialist_id).all()
-            else:
-                if (self.startDate != ''):
-                    if (self.endDate == ''):
-                        self.endDate = self.startDate
+        if ((self.startDate == '') and (self.injury_type == '')):
+            consults = session.query(Consult).filter_by(
+                status=Constants.STATUS_CONFIRMED, specialist_id=self.specialist_id).all()
+        else:
+            if (self.startDate != ''):
+                if (self.endDate == ''):
+                    self.endDate = self.startDate
 
-                    if (self.injury_type != ''):
-                          consults = session.query(Consult).filter(Consult.updated_at.between(self.toDate(self.startDate), self.toDate(
-                            self.endDate)), Consult.injury_type == self.injury_type, Consult.status == Constants.STATUS_CONFIRMED, Consult.specialist_id == self.specialist_id).all()
-                    else:
-                        consults = session.query(Consult).filter(Consult.updated_at.between(self.toDate(self.startDate), self.toDate(
-                            self.endDate)), Consult.status == Constants.STATUS_CONFIRMED, Consult.specialist_id == self.specialist_id).all()
+                if (self.injury_type != ''):
+                    consults = session.query(Consult).filter(Consult.updated_at.between(self.toDate(self.startDate), self.toDate(
+                        self.endDate)), Consult.injury_type == self.injury_type, Consult.status == Constants.STATUS_CONFIRMED, Consult.specialist_id == self.specialist_id).all()
                 else:
-                    consults = session.query(Consult).filter_by(
-                        injury_type=self.injury_type, status=Constants.STATUS_CONFIRMED, specialist_id=self.specialist_id).all()
+                    consults = session.query(Consult).filter(Consult.updated_at.between(self.toDate(self.startDate), self.toDate(
+                        self.endDate)), Consult.status == Constants.STATUS_CONFIRMED, Consult.specialist_id == self.specialist_id).all()
+            else:
+                consults = session.query(Consult).filter_by(
+                    injury_type=self.injury_type, status=Constants.STATUS_CONFIRMED, specialist_id=self.specialist_id).all()
 
-            if not consults:
-                session.close()
-                raise ConsultDoesNotExist()
-
-            response = []
-            for consult in consults:
-                c = ConsultJsonSchemaReadable().dump(consult)
-                u = session.query(User).filter_by(id=consult.user_id).first()
-                c["user_name"] = u.name
-                c["user_email"] = u.email
-                response.append(c)
-
+        if not consults:
             session.close()
-            return response
-        except Exception as error:
-            session.close()
-            raise error
+            raise ConsultDoesNotExist()
+
+        response = []
+        for consult in consults:
+            c = ConsultJsonSchemaReadable().dump(consult)
+            u = session.query(User).filter_by(id=consult.user_id).first()
+            c["user_name"] = u.name
+            c["user_email"] = u.email
+            response.append(c)
+
+        session.close()
+        return response
 
     def toDate(self, dateString):
         return datetime.datetime.strptime(dateString, "%Y-%m-%d").date()

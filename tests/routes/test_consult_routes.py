@@ -1,3 +1,5 @@
+from src.commands.update_consult_status import UpdateConsultStatus
+from src.constants import Constants
 from src.session import Session, engine
 from src.models.model import Base
 from src.main import app
@@ -136,6 +138,77 @@ class TestUserRoutes():
         assert response.status_code == 200
         assert 'id' in response_json
         assert response_json['status'] == 1
+
+  def test_get_pending_consults(self):
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.USER_EMAIL)
+        consult_data = {
+          "injury_type": "test",
+          "shape": "circular",
+          "injuries_count": 1,
+          "distribution": "brazo",
+          "color": "rojo",
+          "photo_url": "https://google.com/",
+          "automatic": False
+        }
+        CreateConsult(Utils.USER_EMAIL, consult_data).execute()
+        response = test_client.get(
+          '/pending_consults', headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 200
+        assert len(response_json) == 1
+        assert 'id' in response_json[0]
+        assert 'created_at' in response_json[0]
+
+  def test_get_confirmed_consults(self):
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.USER_EMAIL)
+        consult_data = {
+          "injury_type": "test",
+          "shape": "circular",
+          "injuries_count": 1,
+          "distribution": "brazo",
+          "color": "rojo",
+          "photo_url": "https://google.com/",
+          "automatic": True
+        }
+        consult = CreateConsult(Utils.USER_EMAIL, consult_data).execute()
+        consult['status'] = Constants.STATUS_CONFIRMED
+        UpdateConsultStatus(consult['id'], consult).execute()
+        response = test_client.get(
+          '/confirmed_consults', headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 412
+
+  def test_get_consults_by_filters(self):
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.USER_EMAIL)
+        consult_data = {
+          "injury_type": "test",
+          "shape": "circular",
+          "injuries_count": 1,
+          "distribution": "brazo",
+          "color": "rojo",
+          "photo_url": "https://google.com/",
+          "automatic": False
+        }
+        CreateConsult(Utils.USER_EMAIL, consult_data).execute()
+        response = test_client.get(
+          '/consults_by_filters', headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        response_json = json.loads(response.data)
+        assert response.status_code == 412
 
   def teardown_method(self):
     self.session.close()

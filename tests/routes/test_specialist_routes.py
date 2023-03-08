@@ -155,6 +155,27 @@ class TestUserRoutes():
         assert response.status_code == 200
         assert 'id' in response_json
 
+  def test_take_consults_by_specialist(self):
+    signup_data = {
+      'name': Utils.SPECIALIST_NAME,
+      'email': Utils.SPECIALIST_EMAIL,
+      'last_name': Utils.SPECIALIST_LAST_NAME,
+      'username': Utils.SPECIALIST_USERNAME,
+      'password': Utils.SPECIALIST_PASSWORD
+    }
+    SignupSpecialist(signup_data.copy()).execute()
+    with app.test_client() as test_client:
+      with app.app_context():
+        access_token = create_access_token(identity=Utils.SPECIALIST_EMAIL)
+        response = test_client.post(
+          self.BASE_PATH + '/take_consults', json={
+            'id_consults': []
+          }, headers={
+            'Authorization': f"Bearer {access_token}"
+          }
+        )
+        assert response.status_code == 400
+
   def teardown_method(self):
     close_all_sessions()
     Base.metadata.drop_all(bind=engine)
