@@ -8,10 +8,13 @@ class SessionConfig():
 
   def url(self):
     db_config = self.config()
-    return f'postgresql://admin:W3aEjkV9FBA1ljAFi8zW1y17hJkWLknx@dpg-cfdjkg82i3mmlo2lef1g-a.oregon-postgres.render.com:5432/dermoapp'
+    return f'postgresql://{db_config["user"]}:{db_config["password"]}@{db_config["host"]}:{db_config["port"]}/{db_config["db"]}'
 
   def config(self):
     db_name = os.environ['DB_NAME'] if 'DB_NAME' in os.environ else 'dermoapp'
+    if "ENV" in os.environ and os.environ['ENV'] == 'test' and 'DB_NAME' not in os.environ:
+      db_name += '_test'
+
     base_config = {
       'host': os.environ['DB_HOST'] if 'DB_HOST' in os.environ else 'localhost',
       'port': os.environ['DB_PORT'] if 'DB_PORT' in os.environ else '5432',
