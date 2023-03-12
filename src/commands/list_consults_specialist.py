@@ -26,7 +26,6 @@ class ConsultSpecialistUpdate(BaseCommannd):
 
             consulta.diagnosis = self.diagnosis
             consulta.description = self.description
-            consulta.status = 1
             
             session.commit()
             session.close()
