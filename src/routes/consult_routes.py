@@ -5,6 +5,7 @@ from ..commands.user_consults import UserConsults
 from ..commands.get_user_by_email import GetUserByEmail
 from ..commands.get_consult import GetConsult
 from ..commands.update_consult_status import UpdateConsultStatus
+from ..commands.list_consults_specialist import ConsultSpecialistUpdate
 
 consult_routes = Blueprint('consult_routes', __name__)
 
@@ -34,3 +35,14 @@ def show(id):
 def update(id):
     consult = UpdateConsultStatus(id, request.get_json()).execute()
     return jsonify(consult)
+
+@consult_routes.route('/consults_update/<id>', methods=['PUT'])
+@jwt_required()
+def update_consult(id):
+    current_email = get_jwt_identity()
+    id = request.get_json()["id"]
+    description = request.get_json()["description"]
+    diagnosis = request.get_json()["diagnosis"]
+    consult = ConsultSpecialistUpdate(current_email, id, description, diagnosis).execute()
+    return consult 
+

@@ -1,0 +1,410 @@
+{
+	"info": {
+		"_postman_id": "53d09a2f-4547-4a02-9bbc-6dfb5a379da1",
+		"name": "Monoliticas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13757171"
+	},
+	"item": [
+		{
+			"name": "Productos",
+			"item": [
+				{
+					"name": "Health",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PRODUCTS_PROTOCOL}}://{{PRODUCTS_URL}}/health",
+							"protocol": "{{PRODUCTS_PROTOCOL}}",
+							"host": [
+								"{{PRODUCTS_URL}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear producto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Test\",\n    \"stock\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PRODUCTS_PROTOCOL}}://{{PRODUCTS_URL}}/productos",
+							"protocol": "{{PRODUCTS_PROTOCOL}}",
+							"host": [
+								"{{PRODUCTS_URL}}"
+							],
+							"path": [
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar productos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);",
+									"",
+									"if(jsonData && jsonData.resultado && jsonData.resultado.length > 0) {",
+									"    pm.collectionVariables.set('PRODUCT_ID', jsonData.resultado[0]._id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PRODUCTS_PROTOCOL}}://{{PRODUCTS_URL}}/productos",
+							"protocol": "{{PRODUCTS_PROTOCOL}}",
+							"host": [
+								"{{PRODUCTS_URL}}"
+							],
+							"path": [
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener producto",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PRODUCTS_PROTOCOL}}://{{PRODUCTS_URL}}/productos/{{PRODUCT_ID}}",
+							"protocol": "{{PRODUCTS_PROTOCOL}}",
+							"host": [
+								"{{PRODUCTS_URL}}"
+							],
+							"path": [
+								"productos",
+								"{{PRODUCT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar producto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PRODUCTS_PROTOCOL}}://{{PRODUCTS_URL}}/productos/{{PRODUCT_ID}}",
+							"protocol": "{{PRODUCTS_PROTOCOL}}",
+							"host": [
+								"{{PRODUCTS_URL}}"
+							],
+							"path": [
+								"productos",
+								"{{PRODUCT_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BFF",
+			"item": [
+				{
+					"name": "Listar productos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);",
+									"",
+									"if(jsonData && jsonData.resultado && jsonData.resultado.length > 0) {",
+									"    pm.collectionVariables.set('PRODUCT_ID', jsonData.resultado[0]._id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Test\",\n    \"stock\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BFF_PROTOCOL}}://{{BFF_URL}}/productos",
+							"protocol": "{{BFF_PROTOCOL}}",
+							"host": [
+								"{{BFF_URL}}"
+							],
+							"path": [
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener producto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Test\",\n    \"stock\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BFF_PROTOCOL}}://{{BFF_URL}}/productos/{{PRODUCT_ID}}",
+							"protocol": "{{BFF_PROTOCOL}}",
+							"host": [
+								"{{BFF_URL}}"
+							],
+							"path": [
+								"productos",
+								"{{PRODUCT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear orden JSON",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_producto\": \"{{PRODUCT_ID}}\",\n    \"user_id\": \"1\",\n    \"cantidad\": 2,\n    \"direccion_entrega\": \"Calle test json\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BFF_PROTOCOL}}://{{BFF_URL}}/orders",
+							"protocol": "{{BFF_PROTOCOL}}",
+							"host": [
+								"{{BFF_URL}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear orden XML",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<root>\n  <id_producto>{{PRODUCT_ID}}</id_producto>\n  <user_id>1</user_id>\n  <cantidad>2</cantidad>\n  <direccion_entrega>Calle test xml</direccion_entrega>\n</root>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BFF_PROTOCOL}}://{{BFF_URL}}/orders",
+							"protocol": "{{BFF_PROTOCOL}}",
+							"host": [
+								"{{BFF_URL}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar ordenes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BFF_PROTOCOL}}://{{BFF_URL}}/orders",
+							"protocol": "{{BFF_PROTOCOL}}",
+							"host": [
+								"{{BFF_URL}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar ordenes por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BFF_PROTOCOL}}://{{BFF_URL}}/orders/{{ORDER_ID}}",
+							"protocol": "{{BFF_PROTOCOL}}",
+							"host": [
+								"{{BFF_URL}}"
+							],
+							"path": [
+								"orders",
+								"{{ORDER_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "PRODUCTS_PROTOCOL",
+			"value": "http",
+			"type": "string"
+		},
+		{
+			"key": "PRODUCTS_URL",
+			"value": "34.70.186.96:3001",
+			"type": "string"
+		},
+		{
+			"key": "PRODUCT_ID",
+			"value": "c60fb5ad-c0de-4f0c-b6bd-de7162aa59f7"
+		},
+		{
+			"key": "BFF_PROTOCOL",
+			"value": "http",
+			"type": "string"
+		},
+		{
+			"key": "BFF_URL",
+			"value": "34.70.186.96:3000",
+			"type": "string"
+		},
+		{
+			"key": "ORDER_ID",
+			"value": "123445",
+			"type": "string"
+		}
+	]
+}
