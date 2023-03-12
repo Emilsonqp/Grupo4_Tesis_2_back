@@ -37,7 +37,7 @@ class LoginSpecialist(BaseCommannd):
             session.add(user)
             session.commit()
 
-            return {"message": "Access granted", "username": {"username": user.username, "id": user.id}, 
+            return {"message": "Access granted", "username": {"username": user.username, "id": user.id, "name": user.name, "last_name": user.last_name}, 
                 "access_token": access_token}
 
         except TypeError:

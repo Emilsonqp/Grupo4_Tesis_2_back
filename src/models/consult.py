@@ -69,6 +69,7 @@ class ConsultJsonSchema(Schema):
 class ConsultJsonSchemaReadable(Schema):
   id = fields.Number()
   created_at = fields.DateTime()
+  updated_at = fields.DateTime()
   injury_type = fields.Str()
   shape = fields.Str()
   injuries_count = fields.Number()

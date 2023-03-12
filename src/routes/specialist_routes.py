@@ -1,4 +1,7 @@
 from flask import jsonify, Blueprint, request
+
+from ..commands.take_consults_by_specialist import TakeConsults
+from ..commands.get_specialist_by_email import GetSpecialistByEmail
 from ..commands.signup_specialist import SignupSpecialist
 from ..commands.login_specialist import LoginSpecialist
 from ..commands.list_specialists import ListSpecialistById
@@ -37,6 +40,14 @@ def update_profile():
     current_email = get_jwt_identity()
     sp = UpdateSpecialist(current_email, request.get_json()).execute()
     return jsonify(sp)
+
+@specialist_routes.route('/specialist/take_consults', methods = ['POST'])
+@jwt_required()
+def take_consults():
+    current_email = get_jwt_identity()
+    specialist = GetSpecialistByEmail(current_email).execute()
+    response = TakeConsults(specialist['id'], request.get_json()).execute()
+    return jsonify(response), 200
 
 @specialist_routes.route('/specialist/logout', methods = ['POST'])
 def logout():
