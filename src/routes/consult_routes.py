@@ -62,9 +62,9 @@ def update(id):
     consult = UpdateConsultStatus(id, request.get_json()).execute()
     return jsonify(consult)
 
-@consult_routes.route('/consults_update/<id>', methods=['PUT'])
+@consult_routes.route('/consults_update/<remote_id>', methods=['PUT'])
 @jwt_required()
-def update_consult(id):
+def update_consult(remote_id):
     current_email = get_jwt_identity()
     id = request.get_json()["id"]
     description = request.get_json()["description"]
